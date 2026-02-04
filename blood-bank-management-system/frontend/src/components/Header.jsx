@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const WEBSITE_NAME = import.meta.env.VITE_WEBSITE_NAME;
 
@@ -8,21 +9,13 @@ export default function Header({ currentUser }) {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
-  // Handle scroll effect
   useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 10;
-      setScrolled(isScrolled);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu when route changes
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [location.pathname]);
+  useEffect(() => setMobileOpen(false), [location.pathname]);
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -32,161 +25,161 @@ export default function Header({ currentUser }) {
 
   const authLinks = currentUser
     ? [
-        { name: "Dashboard", path: "/dashboard" },
-        { name: "Profile", path: "/profile" },
-      ]
+      { name: "Dashboard", path: "/dashboard" },
+      { name: "Profile", path: "/profile" },
+    ]
     : [
-        { name: "Login", path: "/login" },
-        { name: "Register as Donor", path: "/register/donor" },
-        { name: "Register as Facility", path: "/register/facility" },
-      ];
+      { name: "Login", path: "/login" },
+      { name: "Register as Donor", path: "/register/donor" },
+      { name: "Register as Facility", path: "/register/facility" },
+    ];
 
-  const isActiveLink = (path) => {
-    return location.pathname === path;
-  };
+  const isActive = (path) => location.pathname === path;
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled 
-          ? "bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-100" 
-          : "bg-white/90 backdrop-blur-sm border-b border-gray-100"
-      }`}
+    <motion.header
+      initial={{ y: -80 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled
+          ? "bg-white/95 backdrop-blur-lg shadow-lg border-b"
+          : "bg-white/80 backdrop-blur-md"
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          {/* Logo + Title */}
-          <Link 
-            to="/" 
-            className="flex items-center gap-3 group"
-          >
-            <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-br from-red-500 to-red-600 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+        <div className="flex h-20 items-center justify-between">
+
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <motion.div
+              whileHover={{ scale: 1.08, rotate: 3 }}
+              className="w-11 h-11 rounded-xl bg-gradient-to-br from-red-500 to-red-700 shadow-lg flex items-center justify-center"
+            >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 className="w-5 h-5 text-white"
               >
                 <path d="M12 2C12 2 6 8 6 12a6 6 0 0012 0c0-4-6-10-6-10z" />
               </svg>
-            </div>
-            <div className="flex flex-col">
-              <h1 className="text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors duration-200">
+            </motion.div>
+
+            <div className="leading-tight">
+              <h1 className="text-xl font-extrabold tracking-tight text-gray-900 group-hover:text-red-600 transition-colors duration-300">
                 {WEBSITE_NAME}
               </h1>
-              <p className="text-xs text-gray-500 -mt-0.5 font-medium">
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Blood Management System
               </p>
             </div>
+
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-2">
             {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  isActiveLink(link.path)
-                    ? "text-red-700 bg-red-50"
-                    : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
-                }`}
-              >
-                {link.name}
-                
-              </Link>
+              <motion.div key={link.name} whileHover={{ y: -2 }}>
+                <Link
+                  to={link.path}
+                  className={`relative px-4 py-2 text-sm font-medium rounded-lg ${isActive(link.path)
+                      ? "text-red-700"
+                      : "text-gray-700 hover:text-red-600"
+                    }`}
+                >
+                  {link.name}
+                  {isActive(link.path) && (
+                    <motion.span
+                      layoutId="activeTab"
+                      className="absolute inset-x-2 -bottom-1 h-0.5 bg-red-600 rounded-full"
+                    />
+                  )}
+                </Link>
+              </motion.div>
             ))}
-            
-            {/* Separator */}
-            <div className="w-px h-6 bg-gray-300 mx-2"></div>
-            
-            {/* Auth Links */}
+
+            <div className="w-px h-6 bg-gray-300 mx-3" />
+
             {authLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  link.name.includes("Register")
-                    ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg hover:shadow-xl hover:from-red-700 hover:to-red-800 hover:scale-105"
-                    : isActiveLink(link.path)
-                    ? "text-red-700 bg-red-50"
-                    : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
-                }`}
-              >
-                {link.name}
-              </Link>
+              <motion.div key={link.name} whileHover={{ scale: 1.05 }}>
+                <Link
+                  to={link.path}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg ${link.name.includes("Register")
+                      ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-md hover:shadow-lg"
+                      : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
+                    }`}
+                >
+                  {link.name}
+                </Link>
+              </motion.div>
             ))}
           </nav>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Toggle */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className={`md:hidden p-2 rounded-xl transition-all duration-200 ${
-              mobileOpen 
-                ? "bg-red-50 text-red-600" 
-                : "hover:bg-gray-100 text-gray-600"
-            }`}
-            aria-label="Toggle menu"
+            className="md:hidden p-2 rounded-xl text-gray-600 hover:bg-gray-100"
           >
-            <div className="relative w-6 h-6">
-              <span className={`absolute top-1/2 left-1/2 w-5 h-0.5 bg-current transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ${
-                mobileOpen ? "rotate-45" : "-translate-y-1.5"
-              }`}></span>
-              <span className={`absolute top-1/2 left-1/2 w-5 h-0.5 bg-current transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ${
-                mobileOpen ? "opacity-0" : "opacity-100"
-              }`}></span>
-              <span className={`absolute top-1/2 left-1/2 w-5 h-0.5 bg-current transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ${
-                mobileOpen ? "-rotate-45" : "translate-y-1.5"
-              }`}></span>
-            </div>
+            <motion.div
+              animate={mobileOpen ? "open" : "closed"}
+              className="w-6 h-6 relative"
+            >
+              <motion.span
+                variants={{
+                  closed: { rotate: 0, y: -6 },
+                  open: { rotate: 45, y: 0 },
+                }}
+                className="absolute w-5 h-0.5 bg-current left-0"
+              />
+              <motion.span
+                variants={{
+                  closed: { opacity: 1 },
+                  open: { opacity: 0 },
+                }}
+                className="absolute w-5 h-0.5 bg-current left-0 top-2.5"
+              />
+              <motion.span
+                variants={{
+                  closed: { rotate: 0, y: 6 },
+                  open: { rotate: -45, y: 0 },
+                }}
+                className="absolute w-5 h-0.5 bg-current left-0"
+              />
+            </motion.div>
           </button>
         </div>
 
-        {/* Mobile Dropdown */}
-        <div className={`md:hidden overflow-hidden transition-all duration-300 ${
-          mobileOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-        }`}>
-          <div className="border-t border-gray-200 pt-4 pb-6 px-3 bg-white/95 backdrop-blur-sm rounded-b-2xl shadow-lg">
-            {/* Main Navigation Links */}
-            <div className="space-y-1 mb-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  className={`block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 ${
-                    isActiveLink(link.path)
-                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                      : "text-gray-700 hover:bg-gray-50 hover:text-red-600"
-                  }`}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
-            
-            {/* Auth Links */}
-            <div className="space-y-2 border-t border-gray-200 pt-4">
-              {authLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  className={`block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 ${
-                    link.name.includes("Register")
-                      ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg text-center hover:shadow-xl"
-                      : isActiveLink(link.path)
-                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                      : "text-gray-700 hover:bg-gray-50 hover:text-red-600 text-center"
-                  }`}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="md:hidden bg-white/95 backdrop-blur-xl rounded-b-2xl shadow-lg"
+            >
+              <div className="px-4 py-5 space-y-2">
+                {[...navLinks, ...authLinks].map((link) => (
+                  <motion.div
+                    key={link.name}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    <Link
+                      to={link.path}
+                      className={`block px-4 py-3 rounded-xl font-medium text-center ${link.name.includes("Register")
+                          ? "bg-gradient-to-r from-red-600 to-red-700 text-white"
+                          : "text-gray-700 hover:bg-gray-50"
+                        }`}
+                    >
+                      {link.name}
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </header>
+    </motion.header>
   );
 }

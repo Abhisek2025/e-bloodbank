@@ -23,6 +23,8 @@ import { motion } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
+
+
 /* ---------------- ANIMATIONS ---------------- */
 
 const fade = {
@@ -138,158 +140,300 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f7fbfd]">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50 to-indigo-100">
+
       <Header />
 
       {/* ---------------- HERO (LEFT-ALIGNED, DIFFERENT) ---------------- */}
-      <section className="relative bg-gradient-to-r from-[#0f2a44] to-[#123c5a] text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#0b2238] via-[#0f2a44] to-[#123c5a] text-white">
+  {/* Ambient glow */}
+  <div className="absolute -top-32 -left-32 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl" />
+  <div className="absolute bottom-0 -right-32 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl" />
+
+  <motion.div
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true }}
+    variants={{
+      hidden: {},
+      visible: { transition: { staggerChildren: 0.15 } },
+    }}
+    className="relative max-w-7xl mx-auto px-6 py-32 grid md:grid-cols-2 gap-20 items-center"
+  >
+    {/* Left content */}
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 40 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.7 } },
+      }}
+    >
+      <motion.span
+        whileHover={{ scale: 1.05 }}
+        className="inline-flex items-center gap-2 mb-8 px-6 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-sm font-semibold tracking-wide shadow-lg"
+      >
+        National Blood Network Platform
+      </motion.span>
+
+      <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-8 tracking-tight">
+        Faster Blood Access <br />
+        <span className="bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">
+          When Lives Depend On It
+        </span>
+      </h1>
+
+      <p className="text-lg text-slate-200 mb-12 max-w-xl leading-relaxed">
+        A secure, real-time blood bank ecosystem connecting donors, hospitals,
+        and patients when every second matters.
+      </p>
+
+      <div className="flex flex-wrap gap-5">
+        <Link to="/auth">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+            className="px-9 py-4 rounded-xl bg-gradient-to-r from-cyan-400 to-cyan-500 text-[#0f2a44] font-semibold shadow-xl hover:shadow-cyan-500/40 transition"
+          >
+            Get Started <ArrowRight className="inline w-4 h-4 ml-1" />
+          </motion.button>
+        </Link>
+
+        <Link to="#about">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+            className="px-9 py-4 rounded-xl border border-white/30 bg-white/5 backdrop-blur hover:bg-white/10 transition"
+          >
+            Learn More
+          </motion.button>
+        </Link>
+      </div>
+    </motion.div>
+
+    {/* Right card */}
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 60, scale: 0.95 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          transition: { duration: 0.8, ease: "easeOut" },
+        },
+      }}
+      whileHover={{ y: -10 }}
+      className="hidden md:block"
+    >
+      <div className="relative rounded-3xl bg-white/10 backdrop-blur-xl p-12 shadow-2xl border border-white/20">
+        <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-400/20 to-blue-500/20 opacity-0 hover:opacity-100 transition duration-300" />
+
+        <div className="relative">
+          <Shield className="w-20 h-20 text-cyan-300 mb-6 drop-shadow" />
+          <p className="text-slate-200 text-lg leading-relaxed">
+            Trusted by hospitals and donors nationwide for secure, transparent,
+            and life-saving blood management.
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  </motion.div>
+</section>
+
+
+      {/* ---------------- STATS (HORIZONTAL CARDS) ---------------- */}
+      <section className="relative py-24 bg-white overflow-hidden">
+  {/* soft background accents */}
+  <div className="absolute -top-24 -left-24 w-80 h-80 bg-cyan-100/60 rounded-full blur-3xl" />
+  <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-blue-100/60 rounded-full blur-3xl" />
+
+  <div className="relative max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-10">
+    {stats.map((s, i) => {
+      const Icon = s.icon;
+      return (
         <motion.div
-          variants={slideUp}
-          initial="hidden"
-          animate="visible"
-          className="max-w-7xl mx-auto px-6 py-32 grid md:grid-cols-2 gap-16 items-center"
+          key={i}
+          initial={{ opacity: 0, y: 40, scale: 0.95 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: i * 0.1 }}
+          whileHover={{ y: -10 }}
+          className="group relative rounded-3xl bg-gradient-to-br from-[#f7fbfd] to-white p-10 text-center border border-slate-200 shadow-md hover:shadow-2xl transition-all"
         >
-          <div>
-            <span className="inline-block mb-6 px-5 py-2 rounded-full bg-white/10 text-sm">
-              National Blood Network Platform
-            </span>
+          {/* glow on hover */}
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-400/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition duration-300" />
 
-            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
-              Faster Blood Access <br />
-              <span className="text-cyan-400">When Lives Depend On It</span>
-            </h1>
+          <div className="relative">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-cyan-100 flex items-center justify-center group-hover:scale-110 transition">
+              <Icon className="w-8 h-8 text-cyan-600" />
+            </div>
 
-            <p className="text-lg text-slate-200 mb-10 max-w-xl">
-              A modern blood bank management system connecting donors,
-              hospitals, and patients in real time.
+            <div className="text-4xl font-extrabold text-[#0f2a44] mb-1 tracking-tight">
+              {s.value}
+            </div>
+
+            <p className="text-slate-600 text-sm font-medium">
+              {s.label}
             </p>
-
-            <div className="flex flex-wrap gap-4">
-              <Link to="/auth">
-                <button className="px-8 py-4 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-[#0f2a44] font-semibold transition">
-                  Get Started <ArrowRight className="inline w-4 h-4 ml-1" />
-                </button>
-              </Link>
-              <Link to="#about">
-                <button className="px-8 py-4 rounded-xl border border-white/30 hover:bg-white/10 transition">
-                  Learn More
-                </button>
-              </Link>
-            </div>
           </div>
+        </motion.div>
+      );
+    })}
+  </div>
+</section>
 
-          <div className="hidden md:block">
-            <div className="bg-white/10 rounded-3xl p-10 backdrop-blur">
-              <Shield className="w-20 h-20 text-cyan-400 mb-6" />
-              <p className="text-slate-200 text-lg">
-                Trusted by hospitals & donors nationwide for secure and
-                reliable blood management.
-              </p>
-            </div>
-          </div>
+
+      {/* ---------------- Live Blood Availability ---------------- */}
+
+      <section className="py-28 bg-gradient-to-b from-[#f7fbfd] to-[#eef6fb]">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-3xl md:text-4xl font-extrabold text-center text-[#0f2a44] mb-16"
+        >
+          Live Blood Availability
+        </motion.h2>
+
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.12,
+              },
+            },
+          }}
+          className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8 px-6"
+        >
+          {bloodTypes.map((b, i) => (
+            <motion.div
+              key={i}
+              variants={{
+                hidden: { opacity: 0, y: 30, scale: 0.95 },
+                visible: { opacity: 1, y: 0, scale: 1 },
+              }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+              whileHover={{
+                y: -8,
+                scale: 1.05,
+              }}
+              className="relative group rounded-2xl bg-white/90 backdrop-blur-lg p-7 text-center shadow-md hover:shadow-2xl transition-all duration-300"
+            >
+              {/* Glow effect */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition duration-300" />
+
+              <div className="relative z-10">
+                <div className="text-4xl font-extrabold bg-gradient-to-r from-red-700 to-red-900 bg-clip-text text-transparent">
+                  {b.type}
+                </div>
+
+                <p className="mt-3 text-sm font-semibold text-slate-600">
+                  {b.need} Demand
+                </p>
+
+                <p className="mt-1 text-xs text-slate-400">
+                  {b.donors} donors
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </motion.div>
       </section>
 
-      {/* ---------------- STATS (HORIZONTAL CARDS) ---------------- */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((s, i) => {
-            const Icon = s.icon;
-            return (
-              <motion.div
-                key={i}
-                variants={fade}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="bg-[#f0f7fa] rounded-2xl p-8 text-center hover:shadow-xl transition"
-              >
-                <Icon className="w-10 h-10 mx-auto mb-4 text-cyan-600" />
-                <div className="text-3xl font-bold text-[#0f2a44]">
-                  {s.value}
-                </div>
-                <p className="text-slate-600 text-sm">{s.label}</p>
-              </motion.div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ---------------- BLOOD TYPES (GRID BADGES) ---------------- */}
-      <section className="py-24 bg-[#f7fbfd]">
-        <h2 className="text-3xl font-bold text-center text-[#0f2a44] mb-14">
-          Live Blood Availability
-        </h2>
-
-        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 px-6">
-          {bloodTypes.map((b, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition"
-            >
-              <div className="text-3xl font-bold text-cyan-600">
-                {b.type}
-              </div>
-              <p className="text-sm text-slate-600 mt-2">
-                {b.need} Demand
-              </p>
-              <p className="text-xs text-slate-400 mt-1">
-                {b.donors} donors
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* ---------------- ELIGIBILITY (NEW STRUCTURE) ---------------- */}
-      <section className="py-28 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-[#0f2a44] mb-20">
-            Donor Eligibility & Safety
-          </h2>
+      <section className="relative py-32 bg-gradient-to-b from-white to-[#f7fbfd] overflow-hidden">
+  <div className="absolute top-24 left-0 w-72 h-72 bg-cyan-300/10 rounded-full blur-3xl" />
+  <div className="absolute bottom-24 right-0 w-72 h-72 bg-blue-300/10 rounded-full blur-3xl" />
 
-          <div className="grid md:grid-cols-3 gap-12">
-            {eligibilityInfo.map((info, i) => {
-              const Icon = info.icon;
-              return (
-                <motion.div
-                  key={i}
-                  variants={slideUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  className="border border-slate-200 rounded-3xl p-10 hover:border-cyan-400 transition"
-                >
-                  <Icon className="w-12 h-12 text-cyan-600 mb-6" />
-                  <h3 className="text-xl font-semibold text-[#0f2a44] mb-6">
-                    {info.title}
-                  </h3>
-                  <ul className="space-y-3 text-slate-600">
-                    {info.items.map((item, j) => (
-                      <li key={j} className="flex gap-3">
-                        <CheckCircle className="w-5 h-5 text-emerald-500 mt-1" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+  <div className="relative max-w-7xl mx-auto px-6">
+    <motion.h2
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="text-3xl md:text-4xl font-extrabold tracking-tight text-center text-[#0f2a44] mb-24"
+    >
+      Donor Eligibility & Safety
+    </motion.h2>
 
-      <section className="py-28 bg-white">
-  <div className="max-w-7xl mx-auto px-6">
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={{
+        hidden: {},
+        visible: { transition: { staggerChildren: 0.15 } },
+      }}
+      className="grid gap-12 md:grid-cols-3"
+    >
+      {eligibilityInfo.map((info, i) => {
+        const Icon = info.icon;
+        return (
+          <motion.div
+            key={i}
+            variants={{
+              hidden: { opacity: 0, y: 50, scale: 0.95 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                transition: { duration: 0.6, ease: "easeOut" },
+              },
+            }}
+            whileHover={{ y: -10 }}
+            className="group relative rounded-3xl bg-white/80 backdrop-blur-xl p-10 shadow-lg hover:shadow-2xl transition-all duration-300"
+          >
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-400/15 to-blue-500/15 opacity-0 group-hover:opacity-100 transition duration-300" />
+
+            <div className="relative">
+              <div className="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-br from-cyan-100 to-blue-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
+                <Icon className="w-8 h-8 text-cyan-600" />
+              </div>
+
+              <h3 className="text-xl font-semibold text-[#0f2a44] mb-6">
+                {info.title}
+              </h3>
+
+              <ul className="space-y-4 text-slate-600">
+                {info.items.map((item, j) => (
+                  <li key={j} className="flex gap-3 items-start">
+                    <CheckCircle className="w-5 h-5 text-emerald-500 mt-1 flex-shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+        );
+      })}
+    </motion.div>
+  </div>
+</section>
+
+
+   
+{/* Platform Features */}
+
+<section className="relative py-32 bg-white overflow-hidden">
+  
+  {/* Ambient background */}
+  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-cyan-200/20 blur-3xl" />
+
+  <div className="relative max-w-7xl mx-auto px-6">
+
     {/* Header */}
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="max-w-3xl mx-auto text-center mb-20"
+      transition={{ duration: 0.7, ease: "easeOut" }}
+      className="max-w-3xl mx-auto text-center mb-24"
     >
-      <h2 className="text-3xl md:text-4xl font-bold text-[#0f2a44] mb-4">
+      <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#0f2a44] mb-4">
         Platform Features
       </h2>
       <p className="text-lg text-slate-600">
@@ -298,89 +442,39 @@ const LandingPage = () => {
       </p>
     </motion.div>
 
-    {/* Feature Cards */}
-    <div className="grid md:grid-cols-3 gap-10">
+    {/* Cards */}
+    <div className="grid gap-10 md:grid-cols-3">
       {features.map((feature, index) => {
         const Icon = feature.icon;
-        return (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
-            whileHover={{ y: -8 }}
-            className="group bg-[#f7fbfd] rounded-3xl p-10 shadow-md hover:shadow-xl transition"
-          >
-            <div className="w-14 h-14 mb-6 rounded-2xl bg-cyan-100 flex items-center justify-center group-hover:scale-110 transition">
-              <Icon className="w-7 h-7 text-cyan-600" />
-            </div>
 
-            <h3 className="text-xl font-semibold text-[#0f2a44] mb-3">
-              {feature.title}
-            </h3>
-
-            <p className="text-slate-600 leading-relaxed">
-              {feature.description}
-            </p>
-          </motion.div>
-        );
-      })}
-    </div>
-  </div>
-</section>
-
-<section className="py-28 bg-[#f7fbfd]">
-  <div className="max-w-7xl mx-auto px-6">
-    {/* Header */}
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="max-w-3xl mx-auto text-center mb-24"
-    >
-      <h2 className="text-3xl md:text-4xl font-bold text-[#0f2a44] mb-4">
-        How It Works
-      </h2>
-      <p className="text-lg text-slate-600">
-        A simple, transparent process to connect donors with those in need.
-      </p>
-    </motion.div>
-
-    {/* Steps */}
-    <div className="max-w-5xl mx-auto space-y-16">
-      {processSteps.map((step, index) => {
-        const Icon = step.icon;
         return (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col md:flex-row items-start gap-8"
+            transition={{ duration: 0.6, delay: index * 0.1 }}
+            whileHover={{ y: -10 }}
+            className="group relative rounded-3xl bg-white/80 backdrop-blur-xl p-10 shadow-lg hover:shadow-2xl transition-all duration-300"
           >
-            {/* Step Number */}
-            <div className="flex-shrink-0">
-              <div className="w-14 h-14 rounded-full bg-cyan-600 text-white flex items-center justify-center text-lg font-bold shadow-lg">
-                {step.step}
-              </div>
-            </div>
+            {/* Gradient border */}
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-400/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition duration-300" />
 
             {/* Content */}
-            <div className="bg-white rounded-3xl p-8 shadow-md hover:shadow-xl transition flex-1">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-cyan-100 flex items-center justify-center">
-                  <Icon className="w-6 h-6 text-cyan-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-[#0f2a44]">
-                  {step.title}
-                </h3>
+            <div className="relative">
+              {/* Icon */}
+              <div className="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-br from-cyan-100 to-blue-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
+                <Icon className="w-7 h-7 text-cyan-600" />
               </div>
 
+              {/* Title */}
+              <h3 className="text-xl font-semibold text-[#0f2a44] mb-3 group-hover:text-cyan-700 transition-colors">
+                {feature.title}
+              </h3>
+
+              {/* Description */}
               <p className="text-slate-600 leading-relaxed">
-                {step.description}
+                {feature.description}
               </p>
             </div>
           </motion.div>
@@ -392,20 +486,151 @@ const LandingPage = () => {
 
 
 
-      {/* ---------------- CTA ---------------- */}
-      <section className="py-28 bg-gradient-to-r from-[#0f2a44] to-[#123c5a] text-white text-center">
-        <h2 className="text-4xl font-bold mb-6">
-          Become a Lifesaver Today
-        </h2>
-        <p className="max-w-2xl mx-auto text-slate-200 mb-10">
-          Your donation can give someone a second chance at life.
-        </p>
-        <Link to="/auth">
-          <button className="px-10 py-4 bg-cyan-500 hover:bg-cyan-600 text-[#0f2a44] font-semibold rounded-xl transition">
-            Join Now <ArrowRight className="inline w-4 h-4 ml-1" />
-          </button>
-        </Link>
+      {/* ---------------- HOW IT WORKS ---------------- */}
+
+
+
+      <section className="relative py-32 bg-gradient-to-b from-[#f7fbfd] to-[#eef6fb] overflow-hidden">
+
+        {/* Ambient background accents */}
+        <div className="absolute top-24 left-0 w-72 h-72 bg-cyan-300/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-24 right-0 w-72 h-72 bg-blue-300/10 rounded-full blur-3xl" />
+
+        <div className="relative max-w-7xl mx-auto px-6">
+
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="max-w-3xl mx-auto text-center mb-28"
+          >
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#0f2a44] mb-4">
+              How It Works
+            </h2>
+            <p className="text-lg text-slate-600">
+              A simple, transparent process to connect donors with those in need.
+            </p>
+          </motion.div>
+
+          {/* Timeline */}
+          <div className="relative max-w-5xl mx-auto">
+
+            {/* Vertical line */}
+            <div className="absolute left-7 top-0 h-full w-px bg-gradient-to-b from-cyan-300/40 via-blue-300/40 to-transparent hidden md:block" />
+
+            <div className="space-y-20">
+              {processSteps.map((step, index) => {
+                const Icon = step.icon;
+                const isEven = index % 2 === 0;
+
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 60 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className={`relative flex flex-col md:flex-row gap-10 ${isEven ? "md:flex-row" : "md:flex-row-reverse"
+                      }`}
+                  >
+                    {/* Step Indicator */}
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      className="relative z-10 flex-shrink-0"
+                    >
+                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-white flex items-center justify-center text-lg font-bold shadow-lg ring-4 ring-cyan-100">
+                        {step.step}
+                      </div>
+                    </motion.div>
+
+                    {/* Card */}
+                    <motion.div
+                      whileHover={{ y: -6 }}
+                      transition={{ duration: 0.3 }}
+                      className="relative bg-white/90 backdrop-blur-xl rounded-3xl p-8 shadow-lg hover:shadow-2xl flex-1"
+                    >
+                      {/* Card glow */}
+                      <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-400/10 to-blue-500/10 opacity-0 hover:opacity-100 transition duration-300" />
+
+                      <div className="relative">
+                        <div className="flex items-center gap-4 mb-5">
+                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-100 to-blue-100 flex items-center justify-center">
+                            <Icon className="w-6 h-6 text-cyan-600" />
+                          </div>
+                          <h3 className="text-xl font-semibold text-[#0f2a44]">
+                            {step.title}
+                          </h3>
+                        </div>
+
+                        <p className="text-slate-600 leading-relaxed">
+                          {step.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       </section>
+
+
+
+      {/* ---------------- CTA ---------------- */}
+      <section className="relative overflow-hidden py-32 bg-gradient-to-br from-[#0b1f33] via-[#102a43] to-[#1b3a5f] text-white text-center">
+
+        {/* Background glow */}
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl" />
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="relative z-10 max-w-3xl mx-auto px-6"
+        >
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.6 }}
+            className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6"
+          >
+            Become a{" "}
+            <span className="bg-gradient-to-r from-cyan-400 to-sky-400 bg-clip-text text-transparent">
+              Lifesaver
+            </span>{" "}
+            Today
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.25, duration: 0.6 }}
+            className="text-lg text-slate-200 max-w-2xl mx-auto mb-12"
+          >
+            Your donation can give someone a second chance at life.
+            One decision. One moment. One life saved.
+          </motion.p>
+
+          <motion.div
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.96 }}
+            className="inline-block"
+          >
+            <Link to="/auth">
+              <button className="group inline-flex items-center gap-2 px-12 py-4 bg-gradient-to-r from-cyan-400 to-sky-500 text-[#0b1f33] font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                Join Now
+                <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
+            </Link>
+          </motion.div>
+        </motion.div>
+      </section>
+
 
       <Footer />
     </div>

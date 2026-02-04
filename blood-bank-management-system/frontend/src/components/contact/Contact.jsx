@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 import {
   Phone,
   Mail,
@@ -13,190 +15,210 @@ import {
   Clock,
   ShieldCheck,
   HeartHandshake,
+  CheckCircle,
 } from "lucide-react";
 import Header from "../Header";
 import Footer from "../Footer";
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const stagger = {
+  visible: { transition: { staggerChildren: 0.12 } },
+};
+
 const Contact = () => {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!form.name || !form.email || !form.phone || !form.message) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(form.email)) {
+      toast.error("Invalid email address");
+      return;
+    }
+
+    if (form.phone.length < 10) {
+      toast.error("Invalid phone number");
+      return;
+    }
+
+    setLoading(true);
+
+    setTimeout(() => {
+      toast.success("Message sent successfully!");
+      setForm({ name: "", email: "", phone: "", message: "" });
+      setLoading(false);
+    }, 1500);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#f3f9fc]">
       <Header />
 
       {/* HERO */}
-      <section className="mt-20 bg-gradient-to-r from-red-600 to-red-700 text-white py-28 text-center">
-        <h1 className="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight">
-          Contact BloodConnect
-        </h1>
-        <p className="max-w-3xl mx-auto text-lg md:text-xl opacity-90">
-          Whether it’s an emergency blood request, donor support, or general
-          inquiries — our team is always ready to assist you.
-        </p>
-      </section>
-
-      {/* TRUST / HIGHLIGHTS */}
-      <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10 px-6">
-          {[
-            {
-              icon: Clock,
-              title: "24/7 Availability",
-              desc: "We operate round-the-clock to handle emergency blood requirements.",
-            },
-            {
-              icon: ShieldCheck,
-              title: "Trusted Network",
-              desc: "Verified donors and partnered hospitals across the country.",
-            },
-            {
-              icon: HeartHandshake,
-              title: "Community Driven",
-              desc: "Powered by volunteers, donors, and healthcare professionals.",
-            },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="bg-gray-50 p-10 rounded-2xl text-center shadow-sm hover:shadow-md transition"
+      <section className="mt-20 bg-gradient-to-r from-[#0f2a44] to-[#123c5a] text-white">
+        <div className="max-w-7xl mx-auto px-6 py-16 sm:py-24 text-center">
+          <motion.div initial="hidden" animate="visible" variants={stagger}>
+            <motion.h1
+              variants={fadeUp}
+              className="text-3xl sm:text-4xl md:text-6xl font-extrabold mb-5"
             >
-              <item.icon className="w-12 h-12 text-red-600 mx-auto mb-5" />
-              <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
-              <p className="text-gray-600">{item.desc}</p>
-            </div>
-          ))}
+              Contact BloodConnect
+            </motion.h1>
+            <motion.p
+              variants={fadeUp}
+              className="max-w-3xl mx-auto text-sm sm:text-base md:text-lg text-slate-200"
+            >
+              Emergency blood requests, donor support or enquiries — we’re here
+              24/7.
+            </motion.p>
+          </motion.div>
         </div>
       </section>
 
-      {/* CONTACT INFO */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10 px-6">
+      {/* WHY CONTACT */}
+      <section className="py-14 bg-white">
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8"
+        >
           {[
-            {
-              icon: Phone,
-              title: "Emergency Helpline",
-              l1: "+91 7655087808",
-              l2: "Available 24/7",
-            },
-            {
-              icon: Mail,
-              title: "Email Support",
-              l1: "support@bloodconnect.org",
-              l2: "info@bloodconnect.org",
-            },
-            {
-              icon: MapPin,
-              title: "Head Office",
-              l1: "Acharya Vihar",
-              l2: "Bhubaneswar, India",
-            },
-          ].map((item, i) => (
-            <div
+            "Fast emergency response",
+            "Verified donor coordination",
+            "Trusted medical partners",
+          ].map((text, i) => (
+            <motion.div
               key={i}
-              className="bg-white p-10 rounded-2xl shadow-sm hover:shadow-md transition text-center"
+              variants={fadeUp}
+              className="flex items-center gap-4 bg-[#f3f9fc] p-6 rounded-2xl shadow-sm"
             >
-              <item.icon className="w-12 h-12 text-red-600 mx-auto mb-5" />
-              <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-              <p className="text-gray-600">{item.l1}</p>
-              <p className="text-gray-600">{item.l2}</p>
-            </div>
+              <CheckCircle className="text-cyan-500" />
+              <p className="text-sm font-medium text-[#0f2a44]">{text}</p>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* MAP + FORM */}
-      <section className="py-24 bg-white">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 px-6">
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12">
 
           {/* MAP */}
-          <div className="rounded-3xl overflow-hidden shadow-lg h-[520px]">
+          <motion.div
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="rounded-3xl overflow-hidden shadow-lg h-[280px] sm:h-[400px] md:h-[520px]"
+          >
             <iframe
               title="map"
-              src="https://maps.google.com/maps?q=Adaspur%2C%20Cuttack&t=&z=13&ie=UTF8&iwloc=&output=embed"
+              src="https://maps.google.com/maps?q=Adaspur%2C%20Cuttack&output=embed"
               className="w-full h-full"
               loading="lazy"
             />
-          </div>
+          </motion.div>
 
           {/* FORM */}
-          <form className="bg-gray-50 p-12 rounded-3xl shadow-lg space-y-6">
-            <h2 className="text-3xl font-bold text-gray-900">
+          <motion.form
+            onSubmit={handleSubmit}
+            initial={{ opacity: 0, x: 24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="bg-[#f3f9fc] p-6 sm:p-10 rounded-3xl shadow-lg space-y-5"
+          >
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#0f2a44]">
               Send Us a Message
             </h2>
-            <p className="text-gray-600">
-              Have a question, feedback, or urgent request? Fill out the form
-              below and we’ll respond as quickly as possible.
-            </p>
 
             {[
-              {
-                label: "Full Name",
-                icon: User,
-                type: "text",
-                placeholder: "Your full name",
-              },
-              {
-                label: "Email Address",
-                icon: Mail,
-                type: "email",
-                placeholder: "Your email address",
-              },
-              {
-                label: "Phone Number",
-                icon: Phone,
-                type: "text",
-                placeholder: "Your contact number",
-              },
-            ].map((field, i) => (
+              { label: "Full Name", name: "name", icon: User },
+              { label: "Email Address", name: "email", icon: Mail },
+              { label: "Phone Number", name: "phone", icon: Phone },
+            ].map((f, i) => (
               <div key={i}>
-                <label className="font-medium text-gray-700">
-                  {field.label}
+                <label className="text-sm font-medium text-slate-700">
+                  {f.label}
                 </label>
-                <div className="flex items-center border rounded-xl px-4 mt-2 bg-white focus-within:ring-2 ring-red-500">
-                  <field.icon className="text-gray-400 mr-3" />
+                <div className="flex items-center border rounded-xl px-4 mt-2 bg-white focus-within:ring-2 ring-cyan-400">
+                  <f.icon className="text-slate-400 mr-3" />
                   <input
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    className="w-full py-3 outline-none"
+                    name={f.name}
+                    value={form[f.name]}
+                    onChange={handleChange}
+                    className="w-full py-3 text-sm outline-none"
+                    placeholder={f.label}
                   />
                 </div>
               </div>
             ))}
 
             <div>
-              <label className="font-medium text-gray-700">Message</label>
-              <div className="flex items-start border rounded-xl px-4 mt-2 bg-white focus-within:ring-2 ring-red-500">
-                <MessageSquare className="text-gray-400 mr-3 mt-3" />
+              <label className="text-sm font-medium text-slate-700">
+                Message
+              </label>
+              <div className="flex items-start border rounded-xl px-4 mt-2 bg-white focus-within:ring-2 ring-cyan-400">
+                <MessageSquare className="text-slate-400 mr-3 mt-3" />
                 <textarea
+                  name="message"
+                  value={form.message}
+                  onChange={handleChange}
                   rows="4"
-                  placeholder="Describe your query or request..."
-                  className="w-full py-3 outline-none"
+                  className="w-full py-3 text-sm outline-none"
+                  placeholder="Describe your request..."
                 />
               </div>
             </div>
 
-            <button
+            <motion.button
               type="submit"
-              className="w-full bg-red-600 hover:bg-red-700 text-white py-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              disabled={loading}
+              className="w-full bg-cyan-500 hover:bg-cyan-600 text-[#0f2a44] py-4 rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60"
             >
+              {loading ? "Sending..." : "Submit Message"}
               <Send className="w-5 h-5" />
-              Submit Message
-            </button>
+            </motion.button>
 
             {/* SOCIALS */}
-            <div className="pt-8">
-              <p className="text-sm text-gray-500 mb-4">
-                Follow us for updates and blood donation campaigns
+            <div className="pt-6">
+              <p className="text-xs text-slate-500 mb-3">
+                Follow us for donation drives
               </p>
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 {[Instagram, Facebook, Linkedin, Globe].map((Icon, i) => (
-                  <div
+                  <motion.div
                     key={i}
-                    className="p-3 rounded-full bg-red-50 hover:bg-red-100 cursor-pointer transition"
+                    whileHover={{ y: -4 }}
+                    className="p-3 rounded-full bg-cyan-100 hover:bg-cyan-200 cursor-pointer"
                   >
-                    <Icon className="text-red-600" />
-                  </div>
+                    <Icon className="text-cyan-600 w-5 h-5" />
+                  </motion.div>
                 ))}
               </div>
             </div>
-          </form>
+          </motion.form>
         </div>
       </section>
 
