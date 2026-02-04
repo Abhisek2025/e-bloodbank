@@ -83,41 +83,52 @@ export const getDonorProfile = async (req, res) => {
 /* 📝 Update Donor Profile */
 export const updateDonorProfile = async (req, res) => {
   try {
-    // ⚠️ Security Check: Ensure donorId is authenticated and authorized
-    const donorId = req.donor._id; // from protectDonor middleware
+    const donorId = req.donor._id;
     const { fullName, phone, address, age, gender, weight, password } = req.body;
 
-    // Find by ID and exclude the password for initial retrieval
-    const donor = await Donor.findById(donorId).select('+password'); 
-    if (!donor) return res.status(404).json({ message: "Donor not found" });
-
-    // ✅ Update fields only if provided
-    donor.fullName = fullName !== undefined ? fullName : donor.fullName;
-    donor.phone = phone !== undefined ? phone : donor.phone;
-    
-    // Only update address subfields if the main address object is provided
-    if (address) {
-        donor.address.street = address.street || donor.address.street;
-        donor.address.city = address.city || donor.address.city;
-        donor.address.state = address.state || donor.address.state;
-        donor.address.pincode = address.pincode || address.pincode;
+    const donor = await Donor.findById(donorId).select("+password");
+    if (!donor) {
+      return res.status(404).json({ message: "Donor not found" });
     }
-    
-    donor.age = age !== undefined ? age : donor.age;
-    donor.gender = gender !== undefined ? gender : donor.gender;
-    donor.weight = weight !== undefined ? weight : donor.weight;
+
+    if (fullName !== undefined) donor.fullName = fullName;
+    if (phone !== undefined) donor.phone = phone;
+    if (age !== undefined) donor.age = age;
+    if (weight !== undefined) donor.weight = weight;
+
+    // ✅ FIX: normalize gender (BACKEND FIX)
+    if (gender !== undefined) {
+      donor.gender =
+        gender.charAt(0).toUpperCase() + gender.slice(1).toLowerCase();
+    }
+
+    // ✅ Safe address update
+    if (address) {
+      donor.address = donor.address || {};
+
+      if (address.street !== undefined)
+        donor.address.street = address.street;
+
+      if (address.city !== undefined)
+        donor.address.city = address.city;
+
+      if (address.state !== undefined)
+        donor.address.state = address.state;
+
+      if (address.pincode !== undefined)
+        donor.address.pincode = address.pincode;
+    }
 
     if (password) {
-      // 🔑 Hash new password using the same salt rounds as the schema (12)
-      const salt = await bcrypt.genSalt(12); 
+      const salt = await bcrypt.genSalt(12);
       donor.password = await bcrypt.hash(password, salt);
     }
 
     const updatedDonor = await donor.save();
 
     res.status(200).json({
+      success: true,
       message: "Profile updated successfully",
-      // Only send back non-sensitive/non-history fields
       donor: {
         fullName: updatedDonor.fullName,
         email: updatedDonor.email,
@@ -130,13 +141,22 @@ export const updateDonorProfile = async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Error updating donor profile:", error);
-    // Handle validation errors from the schema
-    if (error.name === 'ValidationError') {
-        return res.status(400).json({ message: "Validation failed", errors: error.errors });
+
+    if (error.name === "ValidationError") {
+      const messages = Object.values(error.errors).map(
+        (err) => err.message
+      );
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: messages,
+      });
     }
-    res.status(500).json({ message: "Error updating profile", error: error.message });
+
+    res.status(500).json({ message: "Error updating profile" });
   }
 };
+
+
 
 
 /* 🏥 Get Public Blood Camps for Donors */

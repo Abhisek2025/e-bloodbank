@@ -347,7 +347,7 @@ const res = await axios.get("http://localhost:5000/api/hospital/blood/stock", {
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
             <div className="space-y-3">
               <button
-                onClick={() => window.location.href = '/hospital/request-blood'}
+                onClick={() => window.location.href = '/hospital/blood-request-create'}
                 className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
               >
                 <Plus size={18} />

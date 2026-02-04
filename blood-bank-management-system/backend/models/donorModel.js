@@ -62,16 +62,21 @@ const donorSchema = new mongoose.Schema(
     gender: {
       type: String,
       enum: ["Male", "Female", "Other"],
-      required: [true, "Gender is required"],
+      required: true,
+      set: (value) =>
+        value
+          ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+          : value,
     },
+
     weight: {
       type: Number,
       min: [45, "Minimum weight should be 45kg to donate blood"],
     },
     lastDonationDate: { type: Date }, // Automatically updated by history entry
-    
+
     // This field can be used for manual/medical override, separate from the 90-day cooldown calculated by the virtual
-    eligibleToDonate: { type: Boolean, default: true }, 
+    eligibleToDonate: { type: Boolean, default: true },
 
     // 🧾 Documents (optional for verification)
     idProof: {
@@ -101,13 +106,13 @@ const donorSchema = new mongoose.Schema(
     lockUntil: Date,
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // 🔐 Pre-save hook: Hash password before saving if it's new or modified
 donorSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  
+
   // Use a consistent salt round value (e.g., 12)
   const salt = await bcrypt.genSalt(12);
   this.password = await bcrypt.hash(this.password, salt);
@@ -128,7 +133,6 @@ donorSchema.virtual("isEligible").get(function () {
   const diff = (now - last) / (1000 * 60 * 60 * 24); // Difference in days
   return diff >= 90; // Standard 90-day gap rule
 });
-
 
 const Donor = mongoose.model("Donor", donorSchema);
 export default Donor;

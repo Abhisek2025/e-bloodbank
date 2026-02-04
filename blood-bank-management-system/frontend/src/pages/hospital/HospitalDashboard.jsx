@@ -15,6 +15,7 @@ import {
   RefreshCw
 } from "lucide-react";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 const HospitalDashboard = () => {
   const [hospital, setHospital] = useState(null);
@@ -216,7 +217,13 @@ const HospitalDashboard = () => {
   const recentActivity = getRecentActivity();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-white p-6">
+    <motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 0.4 }}
+  className="min-h-screen bg-gradient-to-br from-red-50 to-white p-6"
+>
+
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -475,7 +482,7 @@ const HospitalDashboard = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

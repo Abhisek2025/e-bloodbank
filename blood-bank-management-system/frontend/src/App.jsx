@@ -7,6 +7,7 @@ import DonorDashboard from "./pages/donor/DonorDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardLayout from "./components/layouts/DashboardLayout";
 import DonorProfile from "./pages/donor/DonorProfile";
+import { Toaster } from "react-hot-toast";
 
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminFacilities from "./pages/admin/AdminFacilities";
@@ -30,7 +31,10 @@ import DonorDonationHistory from "./pages/donor/DonorDonationHistory";
 
 function App() {
   return (
+    <>
+      <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
       <Routes>
+       
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/register/donor" element={<DonorRegister />} />
@@ -70,6 +74,7 @@ function App() {
           <Route path="facilities" element={<GetAllFacilities />} />
         </Route>
       </Routes>
+    </>
   );
 }
 
