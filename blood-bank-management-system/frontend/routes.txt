@@ -1,0 +1,65 @@
+==============================
+BLOOD MANAGEMENT SYSTEM ROUTES
+==============================
+
+------------------------------
+PUBLIC ROUTES
+------------------------------
+/                       -> Landing Page
+/login                  -> Login Page
+/register/donor          -> Donor Registration
+/register/facility       -> Facility Registration
+/about                   -> About Page
+/contact                 -> Contact Page
+
+
+------------------------------
+DONOR ROUTES (Protected)
+------------------------------
+/donor                   -> Donor Dashboard
+/donor/profile           -> Donor Profile
+/donor/camps             -> Donor Camps List
+/donor/history           -> Donor Donation History
+
+
+------------------------------
+HOSPITAL ROUTES (Protected)
+------------------------------
+/hospital                        -> Hospital Dashboard
+/hospital/blood-request-create   -> Create Blood Request
+/hospital/blood-request-history  -> Blood Request History
+/hospital/inventory              -> Hospital Blood Stock
+/hospital/donors                 -> Donor Directory
+
+
+------------------------------
+BLOOD LAB ROUTES (Protected)
+------------------------------
+/lab                   -> Blood Lab Dashboard
+/lab/inventory         -> Blood Stock
+/lab/camps             -> Blood Camps
+/lab/profile           -> Lab Profile
+/lab/requests          -> Manage Requests
+/lab/donor             -> Blood Lab Donors
+
+
+------------------------------
+ADMIN ROUTES (Protected)
+------------------------------
+/admin                 -> Admin Dashboard
+/admin/verification    -> Facility Verification
+/admin/donors          -> All Donors
+/admin/facilities      -> All Facilities
+
+
+------------------------------
+ROLE TO DASHBOARD MAP
+------------------------------
+donor       -> /donor
+hospital    -> /hospital
+blood-lab   -> /lab
+admin       -> /admin
+
+==============================
+END OF FILE
+==============================

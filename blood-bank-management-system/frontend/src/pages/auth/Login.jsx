@@ -1,19 +1,21 @@
 "use client";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  // 🔒 LOGIC UNCHANGED
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (error) setError(""); // clear error on typing
+    if (error) setError("");
   };
 
   const handleSubmit = async (e) => {
@@ -35,28 +37,25 @@ export default function Login() {
       });
 
       const data = await res.json();
-      console.log("Login response:", data);
 
       if (!res.ok) {
-        // 🔒 Handle facility waiting approval or rejected cases
         if (data.message?.includes("awaiting admin approval")) {
-          setError("Your account is awaiting admin approval. Please wait for confirmation.");
+          setError(
+            "Your account is awaiting admin approval. Please wait for confirmation."
+          );
           return;
         }
         if (data.message?.includes("rejected")) {
           setError("Your registration has been rejected by admin.");
           return;
         }
-
         throw new Error(data.message || "Login failed");
       }
 
-      // ✅ Save token and role from response
       const role = data.user?.role || "unknown";
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", role);
 
-      // ✅ Redirect based on backend response or fallback
       const targetPath =
         data.redirect ||
         (role === "donor"
@@ -69,10 +68,8 @@ export default function Login() {
           ? "/admin"
           : "/");
 
-      // ✅ Navigate to the dashboard or home
       navigate(targetPath, { replace: true });
     } catch (err) {
-      console.error("Login error:", err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -80,81 +77,116 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-100 mt-16">
       <Header />
-      <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md border border-gray-200">
-        <h2 className="text-2xl font-bold text-center text-gray-900 mb-4">
-          Login to Blood Bank
-        </h2>
-        <p className="text-center text-gray-500 mb-6">
-          Access your donor, hospital, or lab dashboard
-        </p>
 
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4 flex items-center">
-            <span className="mr-2">⚠</span>
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-800 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              disabled={loading}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition disabled:opacity-50"
-            />
+      <div className="flex items-center justify-center px-4 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-[420px] bg-white rounded-2xl shadow-2xl border border-gray-100 p-8 sm:p-10"
+        >
+          {/* TITLE */}
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-extrabold text-gray-900">
+              Welcome Back 🩸
+            </h2>
+            <p className="text-gray-500 mt-2 text-sm">
+              Login to access your dashboard
+            </p>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-800 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              disabled={loading}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition disabled:opacity-50"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-          >
-            {loading ? (
-              <>
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                Logging in...
-              </>
-            ) : (
-              "Login"
+          {/* ERROR */}
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="mb-5 flex gap-2 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700"
+              >
+                ⚠ {error}
+              </motion.div>
             )}
-          </button>
-        </form>
+          </AnimatePresence>
 
-        <p className="mt-6 text-center text-gray-600 text-sm">
-          Don't have an account?{" "}
-          <a
-            href="/"
-            className="text-red-600 font-medium hover:underline"
-          >
-            Register
-          </a>
-        </p>
+          {/* FORM */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* EMAIL */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="you@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  disabled={loading}
+                  required
+                  className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition hover:border-red-400"
+                />
+              </div>
+            </div>
+
+            {/* PASSWORD */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleChange}
+                  disabled={loading}
+                  required
+                  className="w-full pl-11 pr-12 py-3 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition hover:border-red-400"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+            </div>
+
+            {/* SUBMIT */}
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              disabled={loading}
+              type="submit"
+              className="w-full rounded-xl bg-red-600 py-3 font-semibold text-white shadow-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+              {loading ? (
+                <>
+                  <span className="w-5 h-5 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Logging in...
+                </>
+              ) : (
+                "Login"
+              )}
+            </motion.button>
+          </form>
+
+          {/* REGISTER */}
+          <p className="mt-6 text-center text-sm text-gray-600">
+            Don&apos;t have an account?{" "}
+            <a href="/register/donor" className="font-medium text-red-600 hover:underline">
+              Register
+            </a>
+          </p>
+        </motion.div>
       </div>
     </div>
   );

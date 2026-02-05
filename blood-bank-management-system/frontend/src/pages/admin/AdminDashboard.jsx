@@ -378,14 +378,14 @@ const AdminDashboard = () => {
               icon={<Droplet className="w-5 h-5" />}
               title="Donation History"
               description="View all donation records, analytics, and reports"
-              href="/admin/donations"
+              href="/admin/donors"
             />
             
             <QuickActionCard
               icon={<Calendar className="w-5 h-5" />}
               title="Blood Camps"
               description="Monitor and manage upcoming blood donation camps"
-              href="/admin/camps"
+              href="/admin/facilities"
               buttonText="View Camps"
             />
           </div>

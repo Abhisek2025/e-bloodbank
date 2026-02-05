@@ -19,7 +19,7 @@ import {
   Database,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion} from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -187,7 +187,7 @@ const LandingPage = () => {
       </p>
 
       <div className="flex flex-wrap gap-5">
-        <Link to="/auth">
+        <Link to="/register/donor">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.97 }}
@@ -197,7 +197,7 @@ const LandingPage = () => {
           </motion.button>
         </Link>
 
-        <Link to="#about">
+        <Link to="/about">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.97 }}
@@ -418,12 +418,15 @@ const LandingPage = () => {
    
 {/* Platform Features */}
 
-<section className="relative py-32 bg-white overflow-hidden">
-  
-  {/* Ambient background */}
-  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-cyan-200/20 blur-3xl" />
+<section className="relative py-20 sm:py-24 lg:py-32 bg-white overflow-hidden">
 
-  <div className="relative max-w-7xl mx-auto px-6">
+  {/* Ambient background */}
+  <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 
+                  w-[420px] sm:w-[600px] md:w-[800px] lg:w-[900px] 
+                  h-[260px] sm:h-[320px] md:h-[360px] lg:h-[400px] 
+                  bg-cyan-200/20 blur-3xl" />
+
+  <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
     {/* Header */}
     <motion.div
@@ -431,49 +434,59 @@ const LandingPage = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7, ease: "easeOut" }}
-      className="max-w-3xl mx-auto text-center mb-24"
+      className="max-w-xl sm:max-w-2xl mx-auto text-center mb-14 sm:mb-20 lg:mb-24"
     >
-      <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#0f2a44] mb-4">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-[#0f2a44] mb-4">
         Platform Features
       </h2>
-      <p className="text-lg text-slate-600">
+      <p className="text-base sm:text-lg text-slate-600">
         Designed to simplify blood donation, management, and emergency response
         for hospitals and donors.
       </p>
     </motion.div>
 
     {/* Cards */}
-    <div className="grid gap-10 md:grid-cols-3">
+    <div className="grid gap-6 sm:gap-8 lg:gap-10 
+                    grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {features.map((feature, index) => {
         const Icon = feature.icon;
 
         return (
           <motion.div
             key={index}
-            initial={{ opacity: 0, y: 60 }}
+            initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: index * 0.1 }}
-            whileHover={{ y: -10 }}
-            className="group relative rounded-3xl bg-white/80 backdrop-blur-xl p-10 shadow-lg hover:shadow-2xl transition-all duration-300"
+            whileHover={{ y: -8 }}
+            className="group relative rounded-3xl bg-white/80 backdrop-blur-xl 
+                       p-6 sm:p-8 lg:p-10 
+                       shadow-lg hover:shadow-2xl transition-all duration-300"
           >
             {/* Gradient border */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-400/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition duration-300" />
+            <div className="absolute inset-0 rounded-3xl 
+                            bg-gradient-to-br from-cyan-400/20 to-blue-500/20 
+                            opacity-0 group-hover:opacity-100 transition duration-300" />
 
             {/* Content */}
             <div className="relative">
               {/* Icon */}
-              <div className="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-br from-cyan-100 to-blue-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
-                <Icon className="w-7 h-7 text-cyan-600" />
+              <div className="w-14 h-14 sm:w-16 sm:h-16 mb-5 sm:mb-6 
+                              rounded-2xl bg-gradient-to-br from-cyan-100 to-blue-100 
+                              flex items-center justify-center shadow-sm 
+                              group-hover:scale-110 transition duration-300">
+                <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-cyan-600" />
               </div>
 
               {/* Title */}
-              <h3 className="text-xl font-semibold text-[#0f2a44] mb-3 group-hover:text-cyan-700 transition-colors">
+              <h3 className="text-lg sm:text-xl font-semibold text-[#0f2a44] 
+                             mb-2 sm:mb-3 
+                             group-hover:text-cyan-700 transition-colors">
                 {feature.title}
               </h3>
 
               {/* Description */}
-              <p className="text-slate-600 leading-relaxed">
+              <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                 {feature.description}
               </p>
             </div>
@@ -483,6 +496,7 @@ const LandingPage = () => {
     </div>
   </div>
 </section>
+
 
 
 
@@ -621,7 +635,7 @@ const LandingPage = () => {
             whileTap={{ scale: 0.96 }}
             className="inline-block"
           >
-            <Link to="/auth">
+            <Link to="/register/donor">
               <button className="group inline-flex items-center gap-2 px-12 py-4 bg-gradient-to-r from-cyan-400 to-sky-500 text-[#0b1f33] font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
                 Join Now
                 <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />

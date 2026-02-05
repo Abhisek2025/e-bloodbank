@@ -2,6 +2,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 // Constants for better maintainability
 const FACILITY_TYPES = ["Hospital", "Blood Lab"];
@@ -365,32 +366,70 @@ export default function FacilityRegisterForm() {
   return (
     <div className="min-h-screen bg-red-50 flex items-center justify-center py-8 px-4">
       <div className="w-full max-w-3xl bg-white rounded-xl shadow-lg overflow-hidden">
+
         {/* Header Section */}
-        <div className="bg-red-700 text-white p-6">
-          <h1 className="text-2xl font-bold text-center mb-2">
-            Blood Facility Registration
-          </h1>
-          <p className="text-center mb-4 opacity-90">
-            Register your facility in 3 simple steps
-          </p>
-          
-          {/* Progress Bar */}
-          <div className="mb-2 flex justify-between items-center text-sm">
-            <span>Step {step} of 3</span>
-            <span>{progressPercentage.toFixed(0)}% Complete</span>
+         <motion.div
+  initial={{ opacity: 0, y: -20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.4 }}
+  className="bg-gradient-to-br from-red-700 via-red-600 to-red-700
+             text-white p-6 sm:p-8 rounded-t-2xl shadow-lg"
+>
+  {/* Title */}
+  <h1 className="text-2xl sm:text-3xl font-extrabold text-center mb-2 tracking-wide">
+    Blood Facility Registration
+  </h1>
+
+  <p className="text-center mb-6 text-sm sm:text-base opacity-90">
+    Register your facility in <span className="font-semibold">3 simple steps</span>
+  </p>
+
+  {/* Progress Info */}
+  <div className="mb-2 flex justify-between items-center text-xs sm:text-sm font-medium">
+    <span>Step {step} of 3</span>
+    <span>{progressPercentage.toFixed(0)}% Complete</span>
+  </div>
+
+  {/* Progress Bar */}
+  <div className="w-full bg-red-300/40 rounded-full h-3 overflow-hidden">
+    <motion.div
+      initial={{ width: 0 }}
+      animate={{ width: `${progressPercentage}%` }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="bg-white h-3 rounded-full shadow"
+    />
+  </div>
+
+  {/* Step Indicators */}
+  <div className="flex justify-between items-center mt-4 text-xs sm:text-sm">
+    {["Basic Info", "Account", "Details"].map((label, index) => {
+      const stepNumber = index + 1;
+      const active = step >= stepNumber;
+
+      return (
+        <div key={label} className="flex flex-col items-center gap-1">
+          <div
+            className={`w-7 h-7 flex items-center justify-center rounded-full border-2
+              ${active
+                ? "bg-white text-red-700 border-white font-bold"
+                : "border-white/60 text-white/70"
+              }`}
+          >
+            {stepNumber}
           </div>
-          <div className="w-full bg-red-300 rounded-full h-2.5">
-            <div
-              className="bg-white h-2.5 rounded-full transition-all duration-300"
-              style={{ width: `${progressPercentage}%` }}
-            ></div>
-          </div>
-          <div className="flex justify-between mt-2 text-sm">
-            <span className={step >= 1 ? "font-semibold" : "opacity-75"}>Basic Info</span>
-            <span className={step >= 2 ? "font-semibold" : "opacity-75"}>Account</span>
-            <span className={step >= 3 ? "font-semibold" : "opacity-75"}>Details</span>
-          </div>
+          <span
+            className={`${
+              active ? "font-semibold" : "opacity-75"
+            }`}
+          >
+            {label}
+          </span>
         </div>
+      );
+    })}
+  </div>
+</motion.div>
+
 
         {/* Form Section */}
         <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6">
@@ -796,44 +835,69 @@ export default function FacilityRegisterForm() {
           )}
 
           {/* Navigation Buttons */}
-          <div className={`flex ${step > 1 ? 'justify-between' : 'justify-end'} pt-6 border-t`}>
-            {step > 1 && (
-              <button
-                type="button"
-                onClick={handleBack}
-                className="px-6 py-2.5 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition font-medium"
-                disabled={isSubmitting}
-              >
-                Back
-              </button>
-            )}
-            
-            {step < 3 ? (
-              <button
-                type="button"
-                onClick={handleNext}
-                className="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium"
-              >
-                Next Step
-              </button>
-            ) : (
-               <button
-                type="button" // Must be type="button"
-                onClick={handleSubmit} // Must call handleSubmit manually
-                disabled={isSubmitting}
-                className="px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Registering...
-                  </>
-                ) : (
-                  "Register Facility"
-                )}
-              </button>
-            )}
-          </div>
+         {/* Navigation Buttons */}
+<div
+  className={`flex items-center gap-3 pt-6 border-t ${
+    step > 1 ? "justify-between" : "justify-end"
+  }`}
+>
+  {/* Back to Home */}
+  <button
+    type="button"
+    onClick={() => window.location.href = "/"}
+    className="px-6 py-2.5 border border-pink-300 text-pink-700 rounded-lg
+               hover:bg-pink-50 transition font-bold cursor-pointer"
+  >
+    Back to Home
+  </button>
+
+  <div className="flex gap-3">
+    {/* Step Back */}
+    {step > 1 && (
+      <button
+        type="button"
+        onClick={handleBack}
+        className="px-6 py-2.5 bg-gray-200 text-gray-900 rounded-lg
+                   hover:bg-gray-300 transition font-medium"
+        disabled={isSubmitting}
+      >
+        Back
+      </button>
+    )}
+
+    {/* Next / Submit */}
+    {step < 3 ? (
+      <button
+        type="button"
+        onClick={handleNext}
+        className="px-6 py-2.5 bg-pink-600 text-white rounded-lg
+                   hover:bg-pink-700 transition font-medium cursor-pointer"
+      >
+        Next Step
+      </button>
+    ) : (
+      <button
+        type="button"
+        onClick={handleSubmit}
+        disabled={isSubmitting}
+        className="px-6 py-2.5 bg-green-600 text-white rounded-lg
+                   hover:bg-green-700 transition font-medium
+                   disabled:opacity-50 disabled:cursor-not-allowed
+                   flex items-center"
+      >
+        {isSubmitting ? (
+          <>
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+            Registering...
+          </>
+        ) : (
+          "Register Facility"
+        )}
+      </button>
+    )}
+  </div>
+</div>
+
         </form>
       </div>
     </div>

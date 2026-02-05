@@ -217,10 +217,12 @@ const DashboardLayout = ({ userRole = "donor" }) => {
     items: [],
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
+ const handleLogout = () => {
+  setSidebarOpen(false); // close sidebar on mobile
+  localStorage.removeItem("token");
+  navigate("/login", { replace: true });
+};
+
 
   
 
@@ -460,34 +462,52 @@ const DashboardLayout = ({ userRole = "donor" }) => {
       </div>
 
       {/* MOBILE OVERLAY (omitted for brevity) */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+     {sidebarOpen && (
+  <div
+    className="fixed inset-0 bg-black/40 z-30 lg:hidden"
+    onClick={() => setSidebarOpen(false)}
+  />
+)}
+
 
       {/* Mobile Footer Navigation (omitted for brevity) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-red-100 shadow-lg z-40">
-        <div className="flex justify-around items-center p-2">
-          {config.items.slice(0, 4).map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path;
-            return (
-              <button
-                key={item.path}
-                onClick={() => navigate(item.path)}
-                className={`flex flex-col items-center p-2 rounded-lg transition-all duration-200 flex-1 mx-1 ${
-                  isActive ? 'bg-red-50 text-red-600' : 'text-gray-600'
-                }`}
-              >
-                <Icon size={20} />
-                <span className="text-xs mt-1">{item.label.split(' ')[0]}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+  <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-red-100 shadow-lg z-40">
+  <div className="flex items-center p-2 gap-2 overflow-x-auto no-scrollbar">
+
+    {config.items.map((item) => {
+      const Icon = item.icon;
+      const isActive = location.pathname === item.path;
+
+      return (
+        <button
+          key={item.path}
+          onClick={() => navigate(item.path)}
+          className={`flex flex-col items-center min-w-[64px] p-2 rounded-xl
+            transition-all duration-200 active:scale-95
+            ${isActive ? "bg-red-50 text-red-600" : "text-gray-600"}
+          `}
+        >
+          <Icon size={20} />
+          <span className="text-[10px] mt-1 whitespace-nowrap">
+            {item.label.split(" ")[0]}
+          </span>
+        </button>
+      );
+    })}
+
+    <button
+      onClick={handleLogout}
+      className="flex flex-col items-center min-w-[64px] p-2 rounded-xl
+        transition-all duration-200 active:scale-95 text-red-600"
+    >
+      <LogOut size={20} />
+      <span className="text-[10px] mt-1">Logout</span>
+    </button>
+
+  </div>
+</div>
+
+
     </div>
   );
 };

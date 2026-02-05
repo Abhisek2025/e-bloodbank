@@ -11,41 +11,49 @@ import {
   Instagram,
   Linkedin,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 /* ---------- Static Data ---------- */
 
 const quickLinks = [
   { name: "About Us", path: "/about" },
-  { name: "Our Mission", path: "/mission" },
-  { name: "Success Stories", path: "/stories" },
-  { name: "News & Updates", path: "/news" },
+  { name: "Our Mission", path: "/" },
+  { name: "Success Stories", path: "/" },
+  { name: "News & Updates", path: "/" },
 ];
 
 const donorResources = [
   { name: "Become a Donor", path: "/register/donor" },
-  { name: "Eligibility Criteria", path: "/eligibility" },
-  { name: "Donation Process", path: "/process" },
-  { name: "Donor Benefits", path: "/benefits" },
+  { name: "Eligibility Criteria", path: "/" },
+  { name: "Donation Process", path: "/" },
+  { name: "Donor Benefits", path: "/" },
 ];
 
 const hospitalResources = [
   { name: "Partner with Us", path: "/register/facility" },
-  { name: "Blood Request", path: "/request-blood" },
-  { name: "Inventory Management", path: "/inventory" },
-  { name: "Emergency Protocol", path: "/emergency" },
+  { name: "Blood Request", path: "/" },
+  { name: "Inventory Management", path: "/" },
+  { name: "Emergency Protocol", path: "/" },
 ];
 
 const socialLinks = [
-  { icon: Facebook, url: "#" },
-  { icon: Twitter, url: "#" },
-  { icon: Instagram, url: "#" },
-  { icon: Linkedin, url: "#" },
+  { icon: Facebook, url: "https://www.facebook.com/" },
+  { icon: Twitter, url: "https://x.com/" },
+  { icon: Instagram, url: "https://www.instagram.com/abhisek_334_/#" },
+  { icon: Linkedin, url: "https://www.linkedin.com/in/abhisek-singh-700082251/" },
 ];
 
 /* -------------------------------- */
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setTimeout(() => {
+    toast.success("Subscribed to newsletter!");
+    window.location.reload();
+  }, 1000);
+  };
 
   return (
     <motion.footer
@@ -109,7 +117,7 @@ const Footer = () => {
                            focus:outline-none focus:ring-2 focus:ring-red-500"
               />
               <button
-                type="submit"
+                type="submit" onClick={handleSubmit}
                 className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700
                            text-white font-medium transition"
               >
@@ -131,7 +139,7 @@ const Footer = () => {
                 Contact & Support
               </h4>
 
-              <ContactItem icon={Phone} label="Emergency Hotline" value="1-800-BLOOD-NOW" />
+              <ContactItem icon={Phone} label="Emergency Hotline" value="1800-259-6085" />
               <ContactItem icon={Mail} label="Email Support" value="help@bloodconnect.org" />
               <ContactItem icon={MapPin} label="Coverage" value="Nationwide Network" />
             </div>
