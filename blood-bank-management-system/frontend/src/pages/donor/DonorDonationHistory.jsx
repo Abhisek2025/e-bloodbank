@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
-const API_URL = "http://localhost:5000/api/donor";
+const API_URL = "https://bbms-webserver.onrender.com/api/donor";
 
 const DonorDonationHistory = () => {
   const [history, setHistory] = useState([]);

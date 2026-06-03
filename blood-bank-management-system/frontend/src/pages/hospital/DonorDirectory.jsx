@@ -53,7 +53,7 @@ const DonorDirectory = () => {
       });
 
       const res = await axios.get(
-        `http://localhost:5000/api/hospital/donors?${queryParams}`,
+        `https://bbms-webserver.onrender.com/api/hospital/donors?${queryParams}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -84,7 +84,7 @@ const DonorDirectory = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://localhost:5000/api/hopital/donors/${donorId}/contact`,
+        `https://bbms-webserver.onrender.com/api/hopital/donors/${donorId}/contact`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

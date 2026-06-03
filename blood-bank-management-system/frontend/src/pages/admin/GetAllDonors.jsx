@@ -20,7 +20,7 @@ import {
   ChevronUp
 } from 'lucide-react';
 
-const API_URL = "http://localhost:5000/api/admin";
+const API_URL = "https://bbms-webserver.onrender.com/api/admin";
 
 function GetAllDonors() {
   const [donors, setDonors] = useState([]);

@@ -330,7 +330,7 @@ export default function DonorRegisterForm() {
       role: "donor",
     };
 
-    const API_URL = "http://localhost:5000/api/auth/register";
+    const API_URL = "https://bbms-webserver.onrender.com/api/auth/register";
 
     console.log("Submitting Donor Data:", submissionPayload);
 
