@@ -14,7 +14,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: "http://localhost:5173", // or 3000
+  origin: "https://bbms-client.onrender.com", // or 3000
   credentials: true,
 }));
 
